@@ -17,3 +17,28 @@ module.exports = middlewear and we do this bc...
 The reason I did that was because 
 
 //Created 1st GET /todos & tested it with POSTMAN by creating Collection->Environmet->Route
+
+//Created 2nd GET /todos/:id & tested it with POSTMAN & also pushed to HEROKU and created -Environment->Route
+
+```javascript
+app.get('/todos/:id', function(req, res){ //creating a variable that will hold id from params object.
+  var todoId = parseInt(req.params.id);
+  var matchedTodo;
+  todos.forEach(function(todo){
+    if(todoId === todo.id){
+      matchedTodo = todo;
+    }
+  })
+    if(matchedTodo){
+      res.json(matchedTodo)
+    } else{
+      res.status(404).send();
+    }
+})
+```
+The reason this is used is because when asked for the route it can give each id.
+
+//Created POST //todos
+First, had to initialize id. 
+    `var todoNextId = 1;`
+    And then we first had to require body.

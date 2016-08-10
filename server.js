@@ -20,7 +20,7 @@ var todos = [
   }
 ]
 
-
+var todoNextId = 1;
 
 app.use(middlewear.requireAuthentication); // This MiddleWear is for the whole app!
 
@@ -51,7 +51,17 @@ app.get('/todos/:id', function(req, res){ //creating a variable that will hold i
 })
 
 
-
+app.post('/todos', function(req, res){
+  var body = req.body;
+  // CHALLENGE
+    // add id field
+    body.id = todoNextId;
+    todoNextId++;
+    // push body into array
+    // we justed parsed bofy with id and now we want to persist that to temporary db
+    todos.push(body)
+  res.json(body)
+})
 
 
 
