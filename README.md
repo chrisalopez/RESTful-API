@@ -42,3 +42,21 @@ The reason this is used is because when asked for the route it can give each id.
 First, had to initialize id. 
     `var todoNextId = 1;`
     And then we first had to require body.
+
+//REFACTOR using UnderScore.JS
+    //GET TODOS/:id Why & What did you do?
+
+```javascript
+app.get('/todos/:id', function(req, res){
+//creating a variable that will hold id from params object.
+  var todoId = parseInt(req.params.id);
+// _.findWhere finds
+  var matchedTodo = _.findWhere(todos, {id: todoId});
+    if(matchedTodo){
+      res.json(matchedTodo)
+    } else{
+      res.status(404).send();
+    }
+})
+```
+    //POST TODOS 
