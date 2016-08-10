@@ -9,16 +9,16 @@ var PORT = process.env.PORT || 3000;
 var middlewear = require('./middlewear')
 
 var todos = [
-  {
-    id: 1,
-    description: 'Teach REST API',
-    completed: false
-  },
-  {
-    id: 2,
-    description: 'Go eat a healthy lunch.',
-    completed: true
-  }
+  // {
+  //   id: 1,
+  //   description: 'Teach REST API',
+  //   completed: false
+  // },
+  // {
+  //   id: 2,
+  //   description: 'Go eat a healthy lunch.',
+  //   completed: true
+  // }
 ]
 
 var todoNextId = 1;
@@ -40,7 +40,8 @@ app.get('/todos', function(req, res){
 app.get('/todos/:id', function(req, res){
 //creating a variable that will hold id from params object.
   var todoId = parseInt(req.params.id);
-  var matchedTodo = _.findWhere(todos, {id: todoId})
+// _.findWhere finds the first value that matches all of the key-value pairs
+  var matchedTodo = _.findWhere(todos, {id: todoId});
     if(matchedTodo){
       res.json(matchedTodo)
     } else{
@@ -49,17 +50,32 @@ app.get('/todos/:id', function(req, res){
 })
 
 app.post('/todos', function(req, res){
-  var body = req.body;
-  // CHALLENGE
-    // add id field
+  var body = _.pick(req.body, 'description', 'completed');
+//_.isBooleand
+
+    if (!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length === 0) {
+      return res.status(400).send();
+    }
+    body.description = body.description.trim();
+
     body.id = todoNextId;
     todoNextId++;
-    // push body into array
-    // we justed parsed bofy with id and now we want to persist that to temporary db
+
     todos.push(body)
   res.json(body)
 })
 
+app.delete('/todos/:id', function(req, res){
+  var todoId = parseInt(req.params.id);
+  var matchedTodo = _.findWhere(todos, {id: todoId});
+    //if reverse, no marchedTodo id.
+  if(!matchedTodo){
+    res.status(404).json({"eror": "No Todo Found."})
+  } else {
+    todos = _.without(todos, matchedTodo );
+  }
+  res.json(matchedTodo);
+})
 
 
 app.get('/about', middlewear.logger, function(req, res){

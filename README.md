@@ -45,6 +45,7 @@ First, had to initialize id.
 
 //REFACTOR using UnderScore.JS
     //GET TODOS/:id Why & What did you do?
+    Added var _ to bring in the underscore library and using the _where file to bring up the first listed value
 
 ```javascript
 app.get('/todos/:id', function(req, res){
@@ -59,4 +60,46 @@ app.get('/todos/:id', function(req, res){
     }
 })
 ```
-    //POST TODOS 
+    //POST TODOS Why and What is happening?
+
+```javascript
+app.post('/todos', function(req, res){
+  var body = _.pick(req.body, 'description', 'completed');
+//_.isBooleand
+
+    if (!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length === 0) {
+      return res.status(400).send();
+    }
+    body.description = body.description.trim();
+
+    body.id = todoNextId;
+    todoNextId++;
+
+    todos.push(body)
+  res.json(body)
+})
+```
+
+_.pick copies the required objects. Anything else that gets added to the body will be rejected.
+
+
+//Create DELETE /TODOS/:id (Why and What)
+Returns a copy of the array with all instances of the values removed.
+
+_.without([1, 2, 1, 0, 3, 1, 4], 0, 1);
+=> [2, 3, 4]
+
+```javascript
+app.delete('/todos/:id', function(req, res){
+  var todoId = parseInt(req.params.id);
+  var matchedTodo = _.findWhere(todos, {id: todoId});
+    //if reverse, no marchedTodo id.
+  if(!matchedTodo){
+    res.status(404).json({"eror": "No Todo Found."})
+  } else {
+    todos = _.without(todos, matchedTodo );
+  }
+  res.json(matchedTodo);
+})
+```
+Delete funtion will delete the inputed data. What the not matchedtodo takes the array information, if it is not the same length it will bring an error.
